@@ -4,15 +4,25 @@ from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
 import os
 from werkzeug.utils import secure_filename
+import sys
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///progress.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.config['UPLOAD_FOLDER'] = 'uploads'
-app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # 16MB max file size
 
-# Ensure upload folder exists
+if getattr(sys, 'frozen', False):
+    # If the app is running as a bundled .exe
+    BASE_DIR = os.path.dirname(sys.executable)
+else:
+    # If the app is running in development
+    BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+
+app.config['UPLOAD_FOLDER'] = os.path.join(BASE_DIR, 'uploads')
+
+# Ensure the uploads folder exists
 os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
+
+app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # 16MB max file size
 
 # Allowed file extensions
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
@@ -64,6 +74,11 @@ def add_book():
     total_pages = int(request.form.get('total_pages'))
     reward = request.form.get('reward')
     
+    # Validate that current_page does not exceed total_pages
+    current_page = 0  # Default to 0 when adding a new book
+    if current_page > total_pages:
+        return jsonify({"error": "Current page cannot exceed total pages."}), 400
+
     # Handle image upload
     cover_image = None
     if 'cover_image' in request.files:
@@ -89,7 +104,13 @@ def add_book():
 def update_progress(book_id):
     book = Book.query.get_or_404(book_id)
     data = request.json
-    book.current_page = data['current_page']
+    current_page = data['current_page']
+    
+    # Validate that current_page does not exceed total_pages
+    if current_page > book.total_pages:
+        return jsonify({"error": "Current page cannot exceed total pages."}), 400
+
+    book.current_page = current_page
     db.session.commit()
     return jsonify(book.to_dict())
 
