@@ -1,12 +1,18 @@
-# Reading Progress Tracker
+# Self Development Challenge Tracker  
+A simple web application built with Flask that allows users to track their progress across various challenges. The app provides a user-friendly interface to add new challenges, view current progress, and update completed milestones.  
 
-A simple web application built with Flask that allows users to track their reading progress for various books. The app provides a user-friendly interface to add new books, view current reading status, and update progress.
+## Features  
+- **Add New Challenges**:  
+  Users can input challenge details including challenge title, total challenge tokens, and an optional cover image.  
 
-## Features
-- **Add New Books**: Users can input book details including title, total pages, and cover image.
-- **Track Progress**: Easily update the current page read and see the percentage of the book completed.
-- **API Integration**: The app includes a RESTful API for managing books, allowing for easy integration with other applications.
-- **Image Uploads**: Supports uploading cover images for each book.
+- **Track Progress**:  
+  Easily update the tokens completed so far and see the percentage of the challenge completed.  
+
+- **API Integration**:  
+  The app includes a RESTful API for managing challenges, allowing for seamless integration with other applications.  
+
+- **Image Uploads**:  
+  Supports uploading cover images to visually represent each challenge.  
 
 ## Technologies Used
 - **Flask**
