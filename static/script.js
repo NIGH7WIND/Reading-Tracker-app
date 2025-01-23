@@ -50,7 +50,7 @@ function createBookCard(book) {
                       <div class="space-y-4 mt-4">
                           <div class="flex justify-between text-sm text-gray-600">
                               <span>Progress: ${book.progress}%</span>
-                              <span>${book.current_page} / ${book.total_pages} pages</span>
+                              <span>${book.current_page} / ${book.total_pages} tokens</span>
                           </div>
                           <div class="flex items-center space-x-2">
                               <input type="number" 
@@ -59,7 +59,7 @@ function createBookCard(book) {
                                      min="0"
                                      max="${book.total_pages}"
                                      onchange="updateProgress(${book.id}, this.value)">
-                              <span class="text-sm text-gray-600">pages read</span>
+                              <span class="text-sm text-gray-600">tokens completed</span>
                           </div>
                           ${book.reward ? `
                               <div class="mt-4 p-2 bg-green-50 rounded-md">
@@ -98,7 +98,7 @@ document.getElementById("addBookForm").addEventListener("submit", async (e) => {
 
     // Validate that current_page does not exceed total_pages
     if (currentPage > totalPages) {
-        alert("Current page cannot exceed total pages.");
+        alert("Current page cannot exceed total tokens.");
         return;
     }
 
