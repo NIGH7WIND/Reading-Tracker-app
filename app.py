@@ -100,6 +100,22 @@ def add_book():
     db.session.commit()
     return jsonify(new_book.to_dict())
 
+
+@app.route('/api/books/<int:book_id>', methods=['DELETE'])
+def delete_book(book_id):
+    book = Book.query.get_or_404(book_id)
+    
+    # Delete the cover image file if it exists
+    if book.cover_image:
+        cover_image_path = os.path.join(app.config['UPLOAD_FOLDER'], book.cover_image)
+        if os.path.exists(cover_image_path):
+            os.remove(cover_image_path)
+
+    db.session.delete(book)
+    db.session.commit()
+    return jsonify({"message": "Book deleted successfully."})
+
+
 @app.route('/api/books/<int:book_id>', methods=['PUT'])
 def update_progress(book_id):
     book = Book.query.get_or_404(book_id)
